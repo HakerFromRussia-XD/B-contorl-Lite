@@ -190,6 +190,7 @@ class MainActivity : AppCompatActivity(), Navigator {
             mBluetoothLeService = (service as BluetoothLeService.LocalBinder).service
             if (!mBluetoothLeService?.initialize()!!) {
                 finish()
+
             }
             if (!flagScanWithoutConnect) {
                 mBluetoothLeService?.connect(connectedDeviceAddress)
