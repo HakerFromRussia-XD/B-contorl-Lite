@@ -493,8 +493,8 @@ class ProfileSettingsFragment : Fragment(), HasCustomTitle, HasReturnAction, Has
         dataAllCharts[changeProfile] = createDataChart()
         navigator().saveArrayList(PreferenceKeys.PROFILE_NAMES, profileNames)
         navigator().saveArrayList(PreferenceKeys.DATA_ALL_CHARTS, dataAllCharts)
-        navigator().seveArrayStringList(PreferenceKeys.PERIOD_NAMES_MAIN, periodNamesMain)
-        navigator().seveIntArrayList(PreferenceKeys.START_TIME_ALL_PERIODS_MAIN, startTimeAllPeriodsMain)
-        navigator().seveIntArrayList(PreferenceKeys.INPUT_SPEED_ALL_PERIODS_MAIN, inputSpeedAllPeriodsMain)
+        navigator().saveArrayStringList(PreferenceKeys.PERIOD_NAMES_MAIN, periodNamesMain)
+        navigator().saveIntArrayList(PreferenceKeys.START_TIME_ALL_PERIODS_MAIN, startTimeAllPeriodsMain)
+        navigator().saveIntArrayList(PreferenceKeys.INPUT_SPEED_ALL_PERIODS_MAIN, inputSpeedAllPeriodsMain)
     }
 }

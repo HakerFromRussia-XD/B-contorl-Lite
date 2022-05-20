@@ -190,7 +190,6 @@ class MainActivity : AppCompatActivity(), Navigator {
             mBluetoothLeService = (service as BluetoothLeService.LocalBinder).service
             if (!mBluetoothLeService?.initialize()!!) {
                 finish()
-
             }
             if (!flagScanWithoutConnect) {
                 mBluetoothLeService?.connect(connectedDeviceAddress)
@@ -373,7 +372,7 @@ class MainActivity : AppCompatActivity(), Navigator {
         RxUpdateMainEvent.getInstance().updateBackPresedIvent()
     }
 
-    override fun showSacnScreen() { launchFragment(ScanningFragment()) }
+    override fun showScanScreen() { launchFragment(ScanningFragment()) }
     override fun showTemporaryBasalScreen() { launchFragment(TemoraryBasalFragment()) }
     override fun showBasalProfileSettingsScreen() { launchFragment(ProfileSettingsFragment()) }
     override fun showProfileScreen() { launchFragment(ProfilesFragment()) }
@@ -707,7 +706,7 @@ class MainActivity : AppCompatActivity(), Navigator {
             listTempStr.add(arrayPN)
             listTempStr.add(arrayPN)
             periodNamesMain = listTempStr
-            seveArrayStringList(PERIOD_NAMES_MAIN, periodNamesMain)
+            saveArrayStringList(PERIOD_NAMES_MAIN, periodNamesMain)
 
             val listTempInt = ArrayList<IntArray>()
             val listST = intArrayOf(0)
@@ -715,7 +714,7 @@ class MainActivity : AppCompatActivity(), Navigator {
             listTempInt.add(listST)
             listTempInt.add(listST)
             startTimeAllPeriodsMain = listTempInt
-            seveIntArrayList(START_TIME_ALL_PERIODS_MAIN, startTimeAllPeriodsMain)
+            saveIntArrayList(START_TIME_ALL_PERIODS_MAIN, startTimeAllPeriodsMain)
 
             val listTempInt2 = ArrayList<IntArray>()
             val listIS = intArrayOf(100)
@@ -723,7 +722,7 @@ class MainActivity : AppCompatActivity(), Navigator {
             listTempInt2.add(listIS)
             listTempInt2.add(listIS)
             inputSpeedAllPeriodsMain = listTempInt2
-            seveIntArrayList(INPUT_SPEED_ALL_PERIODS_MAIN, inputSpeedAllPeriodsMain)
+            saveIntArrayList(INPUT_SPEED_ALL_PERIODS_MAIN, inputSpeedAllPeriodsMain)
         } else {
             println("сохранение ЧИТАЕМ ИЗ ПАМЯТИ")
             profileNames = loadArrayList(PROFILE_NAMES)
@@ -1010,7 +1009,7 @@ class MainActivity : AppCompatActivity(), Navigator {
 
 
     // сохранение и загрузка данных
-    override fun seveIntArrayList(key: String, list: ArrayList<IntArray>) {
+    override fun saveIntArrayList(key: String, list: ArrayList<IntArray>) {
         saveInt(key+"_list_size", list.size)
         for (item in 0 until list.size) { saveIntArray(key+item, list[item]) }
     }
@@ -1030,7 +1029,7 @@ class MainActivity : AppCompatActivity(), Navigator {
         for (i in 0 until size) result.add(loadIntArray(key+i))
         return result
     }
-    override fun seveArrayStringList(key: String, list: ArrayList<Array<String>>) {
+    override fun saveArrayStringList(key: String, list: ArrayList<Array<String>>) {
         saveInt(key+"_list_size", list.size)
         for (item in 0 until list.size) { saveStringArray(key+item, list[item]) }
     }
@@ -1125,19 +1124,19 @@ class MainActivity : AppCompatActivity(), Navigator {
                     mConnected = true
                     status_connection_tv.text = getString(R.string.connected)
                     status_connection_tv.setTextColor(Color.rgb(10, 132,255))
+                    if (mBluetoothLeService != null) {
+                        displayGattServices(mBluetoothLeService!!.supportedGattServices)
+                        println("Notify подписка mGattUpdateReceiver")
+                        bleCommand(null, NOTIFICATION_PUMP_STATUS, NOTIFY)
+                    }
+
                     if (showInfoDialogsFlag) {
                         runConnectToPump(connectionPassword.toByteArray(), true, 3)
                         showInfoDialogsFlag = false
                     } else {
                         runConnectToPump(connectionPassword.toByteArray(), false, 3)
                     }
-//                    println("Notify подписка mGattUpdateReceiver")
-//                    startSubscribeStatusPumpDataThread()
-                    if (mBluetoothLeService != null) {
-                        displayGattServices(mBluetoothLeService!!.supportedGattServices)
-                        println("Notify подписка mGattUpdateReceiver")
-                        bleCommand(null, NOTIFICATION_PUMP_STATUS, NOTIFY)
-                    }
+
                 }
                 BluetoothLeService.ACTION_DATA_AVAILABLE == action -> {
                     if(intent.getByteArrayExtra(BluetoothLeService.PASS_DATA) != null) {
@@ -1191,6 +1190,7 @@ class MainActivity : AppCompatActivity(), Navigator {
                     cancelReadBasalProfilesFlag = true
                     runReadNumBasalProfiles()
                     runReadBasalProfiles()
+                    runReadActiveBasalProfile()
                     println("readBasalProfiles readBasalProfilesNotStart=$readBasalProfilesNotStart")
                     readBasalProfilesNotStart = false
 //                }
@@ -2054,6 +2054,7 @@ class MainActivity : AppCompatActivity(), Navigator {
         if (data != null) {
             if ((castUnsignedCharToInt(data[0]) - 1) < profileNames.size) {
                 selectedProfile = castUnsignedCharToInt(data[0]) - 1
+                saveInt(SELECTED_PROFILE, selectedProfile)
                 RxUpdateMainEvent.getInstance().updateSelectBasalProfile()
             }
         }
@@ -2100,9 +2101,9 @@ class MainActivity : AppCompatActivity(), Navigator {
         saveArrayList(PROFILE_NAMES, profileNames)
         saveArrayList(DATA_ALL_CHARTS, dataAllCharts)
 
-        seveArrayStringList(PERIOD_NAMES_MAIN, periodNamesMain)
-        seveIntArrayList(START_TIME_ALL_PERIODS_MAIN, startTimeAllPeriodsMain)
-        seveIntArrayList(INPUT_SPEED_ALL_PERIODS_MAIN, inputSpeedAllPeriodsMain)
+        saveArrayStringList(PERIOD_NAMES_MAIN, periodNamesMain)
+        saveIntArrayList(START_TIME_ALL_PERIODS_MAIN, startTimeAllPeriodsMain)
+        saveIntArrayList(INPUT_SPEED_ALL_PERIODS_MAIN, inputSpeedAllPeriodsMain)
     }
     private fun resetAllLocalLists() {
         createDataChart.clear()
@@ -2598,6 +2599,7 @@ class MainActivity : AppCompatActivity(), Navigator {
                 runAkbRegister(2)
                 runBalanceDragRegister(2)
                 runReadBasalSpeed(2)
+                runReadActiveBasalProfile()
                 try {
                     Thread.sleep(30000)
                 } catch (ignored: Exception) { }

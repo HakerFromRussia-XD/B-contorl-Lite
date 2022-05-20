@@ -21,7 +21,6 @@ import ua.cn.stu.navigation.MainActivity.Companion.inProfileSettingsFragmentFlag
 import ua.cn.stu.navigation.MainActivity.Companion.inputSpeedAllPeriodsMain
 import ua.cn.stu.navigation.MainActivity.Companion.periodNamesMain
 import ua.cn.stu.navigation.MainActivity.Companion.profileNames
-import ua.cn.stu.navigation.MainActivity.Companion.refreshBasalProfile
 import ua.cn.stu.navigation.MainActivity.Companion.selectedProfile
 import ua.cn.stu.navigation.MainActivity.Companion.startTimeAllPeriodsMain
 import ua.cn.stu.navigation.R
@@ -98,9 +97,9 @@ class ProfilesFragment : Fragment(), HasCustomTitle, HasReturnAction {
         navigator().saveArrayList(PreferenceKeys.PROFILE_NAMES, profileNames)
         navigator().saveArrayList(PreferenceKeys.DATA_ALL_CHARTS, dataAllCharts)
 
-        navigator().seveArrayStringList(PreferenceKeys.PERIOD_NAMES_MAIN, periodNamesMain)
-        navigator().seveIntArrayList(PreferenceKeys.START_TIME_ALL_PERIODS_MAIN, startTimeAllPeriodsMain)
-        navigator().seveIntArrayList(PreferenceKeys.INPUT_SPEED_ALL_PERIODS_MAIN, inputSpeedAllPeriodsMain)
+        navigator().saveArrayStringList(PreferenceKeys.PERIOD_NAMES_MAIN, periodNamesMain)
+        navigator().saveIntArrayList(PreferenceKeys.START_TIME_ALL_PERIODS_MAIN, startTimeAllPeriodsMain)
+        navigator().saveIntArrayList(PreferenceKeys.INPUT_SPEED_ALL_PERIODS_MAIN, inputSpeedAllPeriodsMain)
     }
 
     private fun initAdapter(profile_rv: RecyclerView) {

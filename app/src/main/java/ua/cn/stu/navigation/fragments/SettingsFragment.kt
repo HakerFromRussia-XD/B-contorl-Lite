@@ -46,7 +46,7 @@ class SettingsFragment : Fragment(), HasCustomTitle, HasReturnAction {
         }
         binding.settingsRefillReservoirBtn.setOnClickListener { showRefillDialog() }
         binding.settingsConnectedDeviceBtn.setOnClickListener {
-            navigator().showSacnScreen()
+            navigator().showScanScreen()
             MainActivity.inScanFragmentFlag = true
             MainActivity.showInfoDialogsFlag = true
             navigator().disconnect()

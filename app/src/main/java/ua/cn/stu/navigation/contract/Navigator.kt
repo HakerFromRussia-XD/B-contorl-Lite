@@ -3,7 +3,6 @@ package ua.cn.stu.navigation.contract
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
-import ua.cn.stu.navigation.Options
 
 typealias ResultListener<T> = (T) -> Unit
 
@@ -13,7 +12,7 @@ fun Fragment.navigator(): Navigator {
 
 interface Navigator {
 
-    fun showSacnScreen()
+    fun showScanScreen()
     fun showTemporaryBasalScreen()
     fun showBasalProfileSettingsScreen()
     fun showProfileScreen()
@@ -27,8 +26,8 @@ interface Navigator {
     fun showRefilledScreen()
     fun showMenuScreen()
     fun <T> saveArrayList(key: String, list: ArrayList<T>)
-    fun seveIntArrayList(key: String, list: ArrayList<IntArray>)
-    fun seveArrayStringList(key: String, list: ArrayList<Array<String>>)
+    fun saveIntArrayList(key: String, list: ArrayList<IntArray>)
+    fun saveArrayStringList(key: String, list: ArrayList<Array<String>>)
     fun saveInt(key: String, value: Int)
     fun saveString(key: String, text: String)
     fun initBLEStructure()
